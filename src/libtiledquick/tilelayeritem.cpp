@@ -31,6 +31,8 @@
 
 #include <QtMath>
 #include <QQuickWindow>
+#include <QElapsedTimer>
+#include <QDebug>
 
 using namespace Tiled;
 using namespace TiledQuick;
@@ -122,6 +124,7 @@ TileLayerItem::TileLayerItem(TileLayer *layer, MapRenderer *renderer,
     , mRenderer(renderer)
     , mVisibleArea(parent->visibleArea())
 {
+    qDebug() << "--- TileLayerItem Created! ---";
     setFlag(ItemHasContents);
     layerVisibilityChanged();
 
@@ -141,6 +144,14 @@ void TileLayerItem::syncWithTileLayer()
 QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
                                         QQuickItem::UpdatePaintNodeData *)
 {
+    //Benchmark Code --start
+    static QElapsedTimer layerTimer;
+    if (!layerTimer.isValid()) layerTimer.start();
+
+    qint64 elapsed = layerTimer.restart();
+
+   
+    //Benchmark Code --start
     delete node;
     node = new QSGNode;
     node->setFlag(QSGNode::OwnedByParent);
@@ -198,6 +209,10 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
     if (!tileData.isEmpty())
         node->appendChildNode(new TilesNode(helper.texture(), tileData));
 
+   
+    if (elapsed > 1) {
+        qDebug() << "[Layer:" << mLayer->name() << "] Frame Time:" << elapsed << "ms";
+    }
     return node;
 }
 

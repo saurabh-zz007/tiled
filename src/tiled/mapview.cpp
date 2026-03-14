@@ -39,6 +39,8 @@
 #include <QPinchGesture>
 #include <QScrollBar>
 #include <QWheelEvent>
+#include <QElapsedTimer>
+#include <QDebug>
 
 #ifndef QT_NO_OPENGL
 
@@ -465,6 +467,10 @@ bool MapView::event(QEvent *e)
 
 void MapView::paintEvent(QPaintEvent *event)
 {
+    QElapsedTimer timer;
+    timer.start();
+
+    //default code----start
     if (!mViewInitialized) {
         mViewInitialized = true;
 
@@ -472,12 +478,18 @@ void MapView::paintEvent(QPaintEvent *event)
             forceCenterOn(mInitialCenterPos);
         else
             fitMapInView();
+
+
     }
 
     if (auto scene = mapScene())
         scene->setPainterScale(scale());
 
     QGraphicsView::paintEvent(event);
+    //default code----end
+
+
+    qDebug() << "[Legacy] Paint Time:" << timer.elapsed() << "ms";
 }
 
 void MapView::hideEvent(QHideEvent *event)
