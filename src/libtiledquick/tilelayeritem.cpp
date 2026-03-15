@@ -151,7 +151,7 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
     qint64 elapsed = layerTimer.restart();
 
    
-    //Benchmark Code --start
+    
     delete node;
     node = new QSGNode;
     node->setFlag(QSGNode::OwnedByParent);
@@ -209,7 +209,7 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
     if (!tileData.isEmpty())
         node->appendChildNode(new TilesNode(helper.texture(), tileData));
 
-   
+    //Benchmark Code --start
     if (elapsed > 1) {
         qDebug() << "[Layer:" << mLayer->name() << "] Frame Time:" << elapsed << "ms";
     }
